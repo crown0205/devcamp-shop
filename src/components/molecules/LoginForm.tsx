@@ -20,6 +20,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { TabsContent } from "../ui/tabs";
+import { motion } from "framer-motion";
 
 type ILoginSchema = z.infer<typeof loginSchema>;
 interface LoginFormProps {}
@@ -59,35 +60,45 @@ const LoginForm: React.FC<LoginFormProps> = () => {
           <CardTitle>Login</CardTitle>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
-            <form
-              id="login-form"
-              className="space-y-2"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
-              {loginConstants.map((constant) => (
-                <FormField
-                  control={form.control}
-                  key={constant.name}
-                  name={constant.name as keyof ILoginSchema}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{constant.label}</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          id={constant.name}
-                          placeholder={constant.placeholder}
-                          type={constant.type}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ))}
-            </form>
-          </Form>
+          <motion.div
+            animate={{
+              opacity: [0, 1],
+              x: [100, 0],
+            }}
+            transition={{
+              duration: 0.3,
+            }}
+          >
+            <Form {...form}>
+              <form
+                id="login-form"
+                className="space-y-2"
+                onSubmit={form.handleSubmit(onSubmit)}
+              >
+                {loginConstants.map((constant) => (
+                  <FormField
+                    control={form.control}
+                    key={constant.name}
+                    name={constant.name as keyof ILoginSchema}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{constant.label}</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            id={constant.name}
+                            placeholder={constant.placeholder}
+                            type={constant.type}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </form>
+            </Form>
+          </motion.div>
         </CardContent>
         <CardFooter>
           <Button form="login-form" type="submit">
