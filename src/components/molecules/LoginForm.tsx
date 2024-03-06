@@ -21,11 +21,13 @@ import {
 import { Input } from "../ui/input";
 import { TabsContent } from "../ui/tabs";
 import { motion } from "framer-motion";
+import { useToast } from "../ui/use-toast";
 
 type ILoginSchema = z.infer<typeof loginSchema>;
 interface LoginFormProps {}
 
 const LoginForm: React.FC<LoginFormProps> = () => {
+  const { toast } = useToast();
   const form = useForm<ILoginSchema>({
     resolver: zodResolver(loginSchema),
     reValidateMode: "onChange",
@@ -50,7 +52,17 @@ const LoginForm: React.FC<LoginFormProps> = () => {
   ];
 
   const onSubmit = (data: ILoginSchema) => {
-    console.log({ data });
+    console.log(data);
+    // TODO : 로그인 요청
+
+    // NOTE : 로그인 실패 시
+    toast({
+      title: "로그인 실패",
+      description: "이메일 또는 비밀번호를 확인해주세요.",
+      variant: "destructive",
+    });
+    // NOTE : 로그인 성공 시
+    // home으로 이동
   };
 
   return (
@@ -61,6 +73,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
         </CardHeader>
         <CardContent>
           <motion.div
+            style={{ opacity: 0 }}
             animate={{
               opacity: [0, 1],
               x: [100, 0],
