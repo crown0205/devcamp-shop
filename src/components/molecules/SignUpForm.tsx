@@ -1,6 +1,6 @@
 import { signUpSchema } from "@/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
@@ -21,11 +21,14 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { TabsContent } from "../ui/tabs";
+import { motion } from "framer-motion";
+import { ArrowLeft, ArrowLeftIcon, ArrowRight } from "lucide-react";
 
 type ISignUpSchema = z.infer<typeof signUpSchema>;
 interface SignUpFormProps {}
 
 const SignUpForm: React.FC<SignUpFormProps> = ({}) => {
+  const [step, setStep] = useState(0);
   const form = useForm<ISignUpSchema>({
     resolver: zodResolver(signUpSchema),
     reValidateMode: "onChange",
@@ -40,48 +43,49 @@ const SignUpForm: React.FC<SignUpFormProps> = ({}) => {
     },
   });
 
-  // 주소, 상세주소, 우편번호,
-  // NOTE : 아이디, 비밀번호, 비밀번호 확인, 이메일, 이름, 생년월일, 휴대폰번호,
-
-  const signupConstants = [
-    {
-      label: "아이디",
-      name: "id",
-      placeholder: "아이디를 입력해주세요",
-    },
-    {
-      label: "비밀번호",
-      name: "password",
-      placeholder: "비밀번호를 입력해주세요",
-      type: "password",
-    },
-    {
-      label: "비밀번호 확인",
-      name: "passwordConfirm",
-      placeholder: "비밀번호를 다시 입력해주세요",
-      type: "password",
-    },
-    {
-      label: "이메일",
-      name: "email",
-      placeholder: "이메일을 입력해주세요",
-    },
-    {
-      label: "이름",
-      name: "name",
-      placeholder: "이름을 입력해주세요",
-    },
-    {
-      label: "생년월일",
-      name: "birthday",
-      placeholder: "생년월일을 입력해주세요",
-    },
-    {
-      label: "휴대폰번호",
-      name: "phoneNumber",
-      placeholder: "휴대폰번호를 입력해주세요",
-    },
-  ];
+  const signupConstants = {
+    step1: [
+      {
+        label: "아이디",
+        name: "id",
+        placeholder: "아이디를 입력해주세요",
+      },
+      {
+        label: "비밀번호",
+        name: "password",
+        placeholder: "비밀번호를 입력해주세요",
+        type: "password",
+      },
+      {
+        label: "비밀번호 확인",
+        name: "passwordConfirm",
+        placeholder: "비밀번호를 다시 입력해주세요",
+        type: "password",
+      },
+    ],
+    step2: [
+      {
+        label: "이름",
+        name: "name",
+        placeholder: "이름을 입력해주세요",
+      },
+      {
+        label: "이메일",
+        name: "email",
+        placeholder: "이메일을 입력해주세요",
+      },
+      {
+        label: "생년월일",
+        name: "birthday",
+        placeholder: "생년월일을 입력해주세요",
+      },
+      {
+        label: "휴대폰번호",
+        name: "phoneNumber",
+        placeholder: "휴대폰번호를 입력해주세요",
+      },
+    ],
+  };
 
   const onSubmit = (data: ISignUpSchema) => {
     console.log({ data });
@@ -96,37 +100,88 @@ const SignUpForm: React.FC<SignUpFormProps> = ({}) => {
           <Form {...form}>
             <form
               id="signup-form"
-              className="space-y-2"
+              className="flex w-full overflow-hidden"
               onSubmit={form.handleSubmit(onSubmit)}
             >
-              {signupConstants.map((constant) => (
-                <FormField
-                  control={form.control}
-                  key={constant.name}
-                  name={constant.name as keyof ISignUpSchema}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{constant.label}</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          id={constant.name}
-                          placeholder={constant.placeholder}
-                          type={constant.type}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ))}
+              <motion.div
+                className="min-w-full space-y-2 "
+                animate={{
+                  opacity: [0, 1],
+                  x: [100, 0],
+                  translateX: `${step * -100}%`,
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                {signupConstants.step1.map((constant) => (
+                  <FormField
+                    control={form.control}
+                    key={constant.name}
+                    name={constant.name as keyof ISignUpSchema}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{constant.label}</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            id={constant.name}
+                            placeholder={constant.placeholder}
+                            type={constant.type}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </motion.div>
+              <motion.div
+                className="min-w-full space-y-2 "
+                animate={{
+                  opacity: [0, 1],
+                  x: [100, 0],
+                  translateX: `${step * -100}%`,
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                {signupConstants.step2.map((constant) => (
+                  <FormField
+                    control={form.control}
+                    key={constant.name}
+                    name={constant.name as keyof ISignUpSchema}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{constant.label}</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            id={constant.name}
+                            placeholder={constant.placeholder}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </motion.div>
             </form>
           </Form>
         </CardContent>
-        <CardFooter>
-          <Button form="signup-form" type="submit">
-            회원가입
+        <CardFooter className="flex gap-4 w-full">
+          <Button
+            type="button"
+            className="flex gap-2"
+            onClick={() => setStep((prev) => (prev === 0 ? 1 : 0))}
+          >
+            {step === 1 && <ArrowLeft className="h-4 w-4 " />}
+            {step === 0 ? "다음" : "이전"}
+            {step === 0 && <ArrowRight className="h-4 w-4" />}
           </Button>
+          {step === 1 && (
+            <Button form="signup-form" type="submit">
+              회원가입
+            </Button>
+          )}
         </CardFooter>
       </Card>
     </TabsContent>
