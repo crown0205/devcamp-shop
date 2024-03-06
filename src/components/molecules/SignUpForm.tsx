@@ -1,6 +1,8 @@
 import { signUpSchema } from "@/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
@@ -21,13 +23,14 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { TabsContent } from "../ui/tabs";
-import { motion } from "framer-motion";
-import { ArrowLeft, ArrowLeftIcon, ArrowRight } from "lucide-react";
+import { AuthType } from "@/app/page";
 
 type ISignUpSchema = z.infer<typeof signUpSchema>;
-interface SignUpFormProps {}
+interface SignUpFormProps {
+  currentTab: string;
+}
 
-const SignUpForm: React.FC<SignUpFormProps> = ({}) => {
+const SignUpForm: React.FC<SignUpFormProps> = ({ currentTab }) => {
   const [step, setStep] = useState(0);
   const form = useForm<ISignUpSchema>({
     resolver: zodResolver(signUpSchema),
@@ -86,6 +89,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({}) => {
       },
     ],
   };
+
+  useEffect(() => {
+    console.log({ currentTab });
+    if (currentTab !== AuthType.SIGNUP) {
+      setStep(0);
+    }
+  }, [currentTab]);
 
   const onSubmit = (data: ISignUpSchema) => {
     console.log({ data });
