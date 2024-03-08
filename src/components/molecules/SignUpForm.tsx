@@ -95,7 +95,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ currentTab }) => {
   };
 
   useEffect(() => {
-    console.log({ currentTab });
     if (currentTab !== AuthType.SIGNUP) {
       setStep(0);
     }
