@@ -24,6 +24,7 @@ import { motion } from "framer-motion";
 import { useToast } from "../ui/use-toast";
 
 type ILoginSchema = z.infer<typeof loginSchema>;
+
 interface LoginFormProps {}
 
 const LoginForm: React.FC<LoginFormProps> = () => {
@@ -61,8 +62,21 @@ const LoginForm: React.FC<LoginFormProps> = () => {
       description: "이메일 또는 비밀번호를 확인해주세요.",
       variant: "destructive",
     });
+
     // NOTE : 로그인 성공 시
     // home으로 이동
+    const { id, password } = data;
+    if (id === "test" && password === "!1234qwer") {
+      toast({
+        title: "로그인 성공",
+      });
+    } else {
+      toast({
+        title: "로그인 실패",
+        description: "이메일 또는 비밀번호를 확인해주세요.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

@@ -7,6 +7,12 @@ const idRegex = /^[a-zA-Z0-9]{4,}$/;
 const passwordRegex =
   /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+|~\-={}[\]:\";'<>?,./\\]).{8,}$/;
 
+// NOTE : 생년월일 정규식 예시 ) 1999-01-01
+const birthRegex = /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
+// NOTE : 휴대폰 번호 정규식 예시 ) 01012345678
+const phoneRegex = /^[0-9]{3}[0-9]{3,4}[0-9]{4}$/;
+
 export const loginSchema = z.object({
   id: z
     .string()
@@ -45,14 +51,14 @@ export const signUpSchema = z.object({
     .string()
     .min(2, { message: "이름은 두글자 이상이여야 합니다" })
     .max(100, { message: "이름은 100자리 이하여야 합니다" }),
-  birthday: z.string().regex(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/, {
+  birthday: z.string().regex(birthRegex, {
     message: "생년월일을 다시 확인해주세요",
   }),
   phoneNumber: z
     .string()
     .min(10, { message: "최소 10자리 이상 입력해주세요" })
     .max(11, { message: "휴대폰 번호는 11자리 이상일수 없습니다" })
-    .regex(/^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/, {
+    .regex(phoneRegex, {
       message: "휴대폰 번호를 다시 확인해주세요",
     }),
 });

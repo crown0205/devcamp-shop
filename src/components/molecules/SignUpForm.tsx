@@ -1,3 +1,4 @@
+import { AuthType } from "@/app/page";
 import { signUpSchema } from "@/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
@@ -23,7 +24,8 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { TabsContent } from "../ui/tabs";
-import { AuthType } from "@/app/page";
+import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
 
 type ISignUpSchema = z.infer<typeof signUpSchema>;
 interface SignUpFormProps {
@@ -32,6 +34,8 @@ interface SignUpFormProps {
 
 const SignUpForm: React.FC<SignUpFormProps> = ({ currentTab }) => {
   const [step, setStep] = useState(0);
+  const { toast } = useToast();
+  const { push } = useRouter();
   const form = useForm<ISignUpSchema>({
     resolver: zodResolver(signUpSchema),
     reValidateMode: "onChange",
@@ -97,8 +101,34 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ currentTab }) => {
     }
   }, [currentTab]);
 
+  const handleStep = () => {
+    if (step === 0) {
+      const { password, passwordConfirm } = form.getValues();
+      form.trigger(["id", "password", "passwordConfirm"]).then((result) => {
+        if (result) {
+          if (password !== passwordConfirm)
+            form.setError("passwordConfirm", {
+              message: "비밀번호가 일치하지 않습니다",
+            });
+          else setStep(1);
+        }
+      });
+    }
+
+    if (step === 1) {
+      setStep(0);
+    }
+  };
+
   const onSubmit = (data: ISignUpSchema) => {
     console.log({ data });
+    // TODO : 회원가입 요청
+
+    toast({
+      title: "회원가입 성공",
+    });
+    form.reset();
+    // FIXME : 회원가입 성공시 로그인 페이지로 이동
   };
   return (
     <TabsContent value="sign-up">
@@ -178,12 +208,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ currentTab }) => {
           </Form>
         </CardContent>
         <CardFooter className="flex gap-4 w-full">
-          <Button
-            type="button"
-            className="flex gap-2"
-            onClick={() => setStep((prev) => (prev === 0 ? 1 : 0))}
-          >
-            {step === 1 && <ArrowLeft className="h-4 w-4 " />}
+          <Button type="button" className="flex gap-2" onClick={handleStep}>
+            {step === 1 && <ArrowLeft className="h-4 w-4" />}
             {step === 0 ? "다음" : "이전"}
             {step === 0 && <ArrowRight className="h-4 w-4" />}
           </Button>
