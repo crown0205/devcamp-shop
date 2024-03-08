@@ -70,6 +70,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
       toast({
         title: "로그인 성공",
       });
+      form.reset();
     } else {
       toast({
         title: "로그인 실패",
