@@ -2,12 +2,8 @@
 import LoginForm from "@/components/molecules/LoginForm";
 import SignUpForm from "@/components/molecules/SignUpForm";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AuthType } from "@/types/auth";
 import { useState } from "react";
-
-export enum AuthType {
-  LOGIN = "login",
-  SIGNUP = "sign-up",
-}
 
 export default function Home() {
   const [currentTab, setCurrentTab] = useState<AuthType>(AuthType.LOGIN);

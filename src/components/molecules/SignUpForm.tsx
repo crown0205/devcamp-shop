@@ -1,8 +1,8 @@
-import { AuthType } from "@/app/page";
 import { signUpSchema } from "@/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -25,7 +25,7 @@ import {
 import { Input } from "../ui/input";
 import { TabsContent } from "../ui/tabs";
 import { useToast } from "../ui/use-toast";
-import { useRouter } from "next/navigation";
+import { AuthType } from "@/types/auth";
 
 type ISignUpSchema = z.infer<typeof signUpSchema>;
 interface SignUpFormProps {
